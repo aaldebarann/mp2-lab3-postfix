@@ -2,6 +2,8 @@
 #define __STACK_H__
 
 #include <vector>
+#include <cstddef>
+#include <stdexcept>
 
 template <typename T>
 class Stack
@@ -41,13 +43,13 @@ public:
   T top() 
   {
     if(empty())
-      throw std::out_of_range("Stack is empty");
+      throw std::out_of_range("Can't get top from empty stack");
     return mem[sz - 1];
   }
   void pop() 
   {
     if (empty())
-      throw std::out_of_range("Stack is empty");
+      throw std::out_of_range("Can't do pop on empty stack");
     mem.pop_back();
     sz--;
   }
