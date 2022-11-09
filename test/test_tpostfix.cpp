@@ -56,7 +56,7 @@ TEST(ArithmeticExpression, can_get_infix)
 
 TEST(ArithmeticExpression, can_get_postfix_equal_priority)
 {
-  ArithmeticExpression expression("a+b - c      - d");
+  ArithmeticExpression expression("a   + b - c      - d");
   EXPECT_EQ("ab+c-d-", expression.getPostfix());
 }
 TEST(ArithmeticExpression, can_get_postfix_different_priority)
