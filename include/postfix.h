@@ -9,10 +9,16 @@
 using namespace std;
 
 class ArithmeticExpression {
+
     // приоритет операций
     static map<char, int> priority; // все разрешенные операции односимвольные
     // типы лексем
     enum lType {number, variable, operation, begin, end, null}; // begin и end - открывающая и закрывающая скобка
+    string text;
+    vector<pair<lType, string>> infix; // набор пар (тип_лексемы, текст_лексемы)
+    vector<pair<lType, string>> postfix; // набор пар (тип_лексемы, текст_лексемы)
+    map<string, double> operands;
+
     // проверка символов
     static bool isDigit(char c); // 0 ... 9
     static bool isLetter(char c); // a ... z, A ... Z, _
@@ -31,11 +37,6 @@ class ArithmeticExpression {
         }
         str.erase(str.size() - spaces, spaces);
     }
-
-    string text;
-    vector<pair<lType, string>> lexems; // набор пар (тип_лексемы, текст_лексемы)
-    vector<pair<lType, string>> postfix; // набор пар (тип_лексемы, текст_лексемы)
-    map<string, double> operands;
 
     void parse(); // текст -> набор лексем
     void toPostfix();

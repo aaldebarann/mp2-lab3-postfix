@@ -26,7 +26,7 @@ void ArithmeticExpression::parse()
                 if(isPoint(c) || isDigit(c))
                     continue;
                 // считывание числа окончено
-                lexems.emplace_back(number, text.substr(b,i - b));
+                infix.emplace_back(number, text.substr(b, i - b));
                 if(isEnd(c)) {
                     b = i;
                     t = end;
@@ -41,7 +41,7 @@ void ArithmeticExpression::parse()
                 if(isLetter(c) || isDigit(c))
                     continue;
                 // считывание переменной окончено
-                lexems.emplace_back(variable, text.substr(b,i - b));
+                infix.emplace_back(variable, text.substr(b, i - b));
                 operands.insert({text.substr(b,i - b), 0.0});
                 if(isEnd(c)) {
                     b = i;
@@ -55,7 +55,7 @@ void ArithmeticExpression::parse()
                 break;
             case (operation):
                 // считывание операции окончено
-                lexems.emplace_back(operation, text.substr(b,i - b));
+                infix.emplace_back(operation, text.substr(b, i - b));
                 if(isBegin(c)) {
                     b = i;
                     t = begin;
@@ -72,7 +72,7 @@ void ArithmeticExpression::parse()
             case (begin):
                 // считывание открывающей скобки окончено
                 allBracketsAreClosed++;
-                lexems.emplace_back(begin, text.substr(b,i - b));
+                infix.emplace_back(begin, text.substr(b, i - b));
                 if(isBegin(c)) {
                     b = i;
                     t = begin;
@@ -89,7 +89,7 @@ void ArithmeticExpression::parse()
             case (end):
                 // считывание закрывающей скобки окончено
                 allBracketsAreClosed--;
-                lexems.emplace_back(end, text.substr(b,i - b));
+                infix.emplace_back(end, text.substr(b, i - b));
                 if(isEnd(c)) {
                     b = i;
                     t = end;
@@ -117,7 +117,7 @@ void ArithmeticExpression::parse()
                 break;
         }
     }
-    lexems.emplace_back(t, text.substr(b,text.size() - b));
+    infix.emplace_back(t, text.substr(b, text.size() - b));
     if(t == variable)
         operands.insert({text.substr(b,text.size() - b), 0.0});
     if(t == end)
@@ -136,7 +136,7 @@ void ArithmeticExpression::toPostfix()
 {
   Stack<pair<lType, string>> st;
   pair<lType, string> stackItem;
-  for (auto& lexem : lexems) {
+  for (auto& lexem : infix) {
     switch (lexem.first) {
     case begin:
       st.push(lexem);
