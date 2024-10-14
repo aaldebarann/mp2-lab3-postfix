@@ -23,26 +23,10 @@ void ArithmeticExpression::parse()
             continue;
         switch(t) {
             case (number):
-                if(isPoint(c) || isDigit(c))
+                if(isDigit(c))
                     continue;
                 // считывание числа окончено
                 infix.emplace_back(number, text.substr(b, i - b));
-                if(isEnd(c)) {
-                    b = i;
-                    t = end;
-                } else if(isOperation(c)) {
-                    b = i;
-                    t = operation;
-                } else {
-                    throw invalid_argument("Invalid expression");
-                }
-                break;
-            case (variable):
-                if(isLetter(c) || isDigit(c))
-                    continue;
-                // считывание переменной окончено
-                infix.emplace_back(variable, text.substr(b, i - b));
-                operands.insert({text.substr(b,i - b), 0.0});
                 if(isEnd(c)) {
                     b = i;
                     t = end;
@@ -59,12 +43,9 @@ void ArithmeticExpression::parse()
                 if(isBegin(c)) {
                     b = i;
                     t = begin;
-                } else if(isDigit(c) || isPoint(c) || isMinus(c)) {
+                } else if(isDigit(c) || isMinus(c)) {
                     b = i;
                     t = number;
-                } else if(isLetter(c)) {
-                    b = i;
-                    t = variable;
                 } else {
                     throw invalid_argument("Invalid expression");
                 }
@@ -76,12 +57,9 @@ void ArithmeticExpression::parse()
                 if(isBegin(c)) {
                     b = i;
                     t = begin;
-                } else if(isDigit(c) || isPoint(c) || isMinus(c)) {
+                } else if(isDigit(c) || isMinus(c)) {
                     b = i;
                     t = number;
-                } else if(isLetter(c)) {
-                    b = i;
-                    t = variable;
                 } else {
                     throw invalid_argument("Invalid expression");
                 }
@@ -105,12 +83,9 @@ void ArithmeticExpression::parse()
                 if(isBegin(c)) {
                     b = i;
                     t = begin;
-                } else if(isDigit(c) || isPoint(c) || isMinus(c)) {
+                } else if(isDigit(c) || isMinus(c)) {
                     b = i;
                     t = number;
-                } else if(isLetter(c)) {
-                    b = i;
-                    t = variable;
                 } else {
                     throw invalid_argument("Invalid expression");
                 }
@@ -118,8 +93,6 @@ void ArithmeticExpression::parse()
         }
     }
     infix.emplace_back(t, text.substr(b, text.size() - b));
-    if(t == variable)
-        operands.insert({text.substr(b,text.size() - b), 0.0});
     if(t == end)
         allBracketsAreClosed--;
     if(t == begin)
@@ -127,7 +100,7 @@ void ArithmeticExpression::parse()
 
     if(allBracketsAreClosed != 0)
         throw invalid_argument("Invalid expression: troubles with brackets");
-    if((t != end && t != variable && t != number)) {
+    if((t != end && t != number)) {
         throw invalid_argument("Invalid expression: invalid ending");
     }
 } // текст -> набор лексем
@@ -174,9 +147,8 @@ void ArithmeticExpression::toPostfix()
   }
 }
 
-int_t ArithmeticExpression::Calculate(istream& input, ostream& output)
+int_t ArithmeticExpression::Calculate(ostream& output)
 {
-    readOperands(input, output);
     int_t left, right; // операнды
     Stack<int_t> st;
     for(auto& lexem: postfix) {
@@ -217,28 +189,14 @@ int_t ArithmeticExpression::Calculate(istream& input, ostream& output)
                 st.push(left % right);
                 break;
             default:
-                if(lexem.first == variable)
-                    st.push(operands[lexem.second]);
-                else
-                    st.push(stoll(lexem.second));
+                st.push(stoll(lexem.second));
         }
     }
     return st.top();
 }
 
-void ArithmeticExpression::readOperands(istream& input, ostream& output) {
-    output << "Enter values:"<< endl;
-    for(auto& o: operands) {
-        output << o.first << " = ";
-        input >> o.second;
-    }
-}
-
 bool ArithmeticExpression::isDigit(char c) {
     return '0' <= c && c <= '9';
-}
-bool ArithmeticExpression::isLetter(char c) {
-    return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_';
 }
 bool ArithmeticExpression::isOperation(char c) {
     return c == '+' || c == '-' || c == '*' || c == '/' || c == '%';
@@ -251,7 +209,4 @@ bool ArithmeticExpression::isBegin(char c) {
 }
 bool ArithmeticExpression::isEnd(char c) {
     return c == ')';
-}
-bool ArithmeticExpression::isPoint(char c) {
-    return c == '.';
 }

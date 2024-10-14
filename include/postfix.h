@@ -15,18 +15,15 @@ class ArithmeticExpression {
     // приоритет операций
     static map<char, int> priority; // все разрешенные операции односимвольные
     // типы лексем
-    enum lType {number, variable, operation, begin, end, null}; // begin и end - открывающая и закрывающая скобка
+    enum lType {number, operation, begin, end, null}; // begin и end - открывающая и закрывающая скобка
     string text;
     vector<pair<lType, string>> infix; // набор пар (тип_лексемы, текст_лексемы)
     vector<pair<lType, string>> postfix; // набор пар (тип_лексемы, текст_лексемы)
-    map<string, double> operands;
-
+    
     // проверка символов
     static bool isDigit(char c); // 0 ... 9
-    static bool isLetter(char c); // a ... z, A ... Z, _
     static bool isOperation(char c); // +, -, *, /, %
     static bool isMinus(char c); // -
-    static bool isPoint(char c); // -
     static bool isBegin(char c); // (
     static bool isEnd(char c); // )
 
@@ -42,7 +39,6 @@ class ArithmeticExpression {
 
     void parse(); // текст -> набор лексем
     void toPostfix();
-    void readOperands(istream& input, ostream& output);
 
 public:
     explicit ArithmeticExpression(const string& text);
@@ -56,7 +52,7 @@ public:
         return postfixStr;
     }
 
-    int_t Calculate(istream& input = cin, ostream& output = cout); // Ввод переменных, вычисление по постфиксной форме
+    int_t Calculate(ostream& output = cout); // Ввод переменных, вычисление по постфиксной форме
 };
 
 #endif
