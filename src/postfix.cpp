@@ -1,6 +1,6 @@
 ﻿#include "postfix.h"
 
-map<char, int> ArithmeticExpression::priority = { {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2} };
+map<char, int> ArithmeticExpression::priority = { {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'%', 2} };
 
 ArithmeticExpression::ArithmeticExpression(const string& text)
 {
@@ -174,11 +174,11 @@ void ArithmeticExpression::toPostfix()
   }
 }
 
-double ArithmeticExpression::Calculate(istream& input, ostream& output)
+int_t ArithmeticExpression::Calculate(istream& input, ostream& output)
 {
     readOperands(input, output);
-    double left, right; // операнды
-    Stack<double> st;
+    int_t left, right; // операнды
+    Stack<int_t> st;
     for(auto& lexem: postfix) {
         switch (lexem.second[0]) {
             case '+':
@@ -209,11 +209,18 @@ double ArithmeticExpression::Calculate(istream& input, ostream& output)
                 st.pop();
                 st.push(left / right);
                 break;
+            case '%':
+                right = st.top();
+                st.pop();
+                left = st.top();
+                st.pop();
+                st.push(left % right);
+                break;
             default:
                 if(lexem.first == variable)
                     st.push(operands[lexem.second]);
                 else
-                    st.push(stod(lexem.second));
+                    st.push(stoll(lexem.second));
         }
     }
     return st.top();
@@ -234,7 +241,7 @@ bool ArithmeticExpression::isLetter(char c) {
     return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_';
 }
 bool ArithmeticExpression::isOperation(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/';
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '%';
 }
 bool ArithmeticExpression::isMinus(char c) {
     return c == '-';

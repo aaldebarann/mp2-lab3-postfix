@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#define int_t long long
+
 class ArithmeticExpression {
 
     // приоритет операций
@@ -22,7 +24,7 @@ class ArithmeticExpression {
     // проверка символов
     static bool isDigit(char c); // 0 ... 9
     static bool isLetter(char c); // a ... z, A ... Z, _
-    static bool isOperation(char c); // +, -, *, /
+    static bool isOperation(char c); // +, -, *, /, %
     static bool isMinus(char c); // -
     static bool isPoint(char c); // -
     static bool isBegin(char c); // (
@@ -54,7 +56,7 @@ public:
         return postfixStr;
     }
 
-    double Calculate(istream& input = cin, ostream& output = cout); // Ввод переменных, вычисление по постфиксной форме
+    int_t Calculate(istream& input = cin, ostream& output = cout); // Ввод переменных, вычисление по постфиксной форме
 };
 
 #endif
