@@ -53,7 +53,7 @@ public:
         return postfixStr;
     }
 
-    int_t Calculate(ostream& output = cout); // Ввод переменных, вычисление по постфиксной форме
+    int_t Calculate(ostream& output = cout); // вычисление по постфиксной форме
 };
 
 #endif
