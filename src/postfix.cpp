@@ -107,7 +107,7 @@ void ArithmeticExpression::parse()
 
 void ArithmeticExpression::toPostfix()
 {
-  Stack<pair<lType, string>> st;
+  stack<pair<lType, string>> st;
   pair<lType, string> stackItem;
   for (auto& lexem : infix) {
     switch (lexem.first) {
@@ -150,7 +150,7 @@ void ArithmeticExpression::toPostfix()
 int_t ArithmeticExpression::Calculate(ostream& output)
 {
     int_t left, right; // операнды
-    Stack<int_t> st;
+    stack<int_t> st;
     for(auto& lexem: postfix) {
         switch (lexem.second[0]) {
             case '+':

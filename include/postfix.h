@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <string>
+#include <stack>
 #include <map>
-#include "stack.h"
+#include <vector>
 
 using namespace std;
 
